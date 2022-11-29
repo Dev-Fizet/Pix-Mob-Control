@@ -13,7 +13,7 @@ from effect_definitions import base_color_effects, tail_codes, special_effects
 
 # Which serial port the Arduino is connected to. You can find this with the Arduino IDE or follow these instructions:
 # https://www.mathworks.com/help/supportpkg/arduinoio/ug/find-arduino-port-on-windows-mac-and-linux.html
-ARDUINO_SERIAL_PORT = "COM6"
+ARDUINO_SERIAL_PORT = "COM8"
 
 # Baud rate of the serial connection set up on the Arduino. It is 115200 in the included sketches.
 ARDUINO_BAUD_RATE = 115200

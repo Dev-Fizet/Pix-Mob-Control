@@ -15,7 +15,7 @@ import datetime
 
 # Which serial port the Arduino is connected to. You can find this with the Arduino IDE or follow these instructions:
 # https://www.mathworks.com/help/supportpkg/arduinoio/ug/find-arduino-port-on-windows-mac-and-linux.html
-ARDUINO_SERIAL_PORT = "COM6"
+ARDUINO_SERIAL_PORT = "COM8"
 
 # Baud rate of the serial connection set up on the Arduino. It is 115200 in the included sketches.
 ARDUINO_BAUD_RATE = 115200
@@ -32,19 +32,73 @@ EFFECTS_TO_SHOW = [
     {
         "main_effect": "RED",
         "tail_code": None,
-        "duration": 5,
+        "duration": 0.5,
         "hold_with_repeated_send": True
     },
     {
         "main_effect": "GREEN",
         "tail_code": None,
-        "duration": 5,
+        "duration": 0.5,
         "hold_with_repeated_send": True
     },
     {
         "main_effect": "BLUE",
         "tail_code": None,
-        "duration": 5,
+        "duration": 0.5,
+        "hold_with_repeated_send": True,
+    },
+    {
+        "main_effect": "RED",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True
+    },
+    {
+        "main_effect": "GREEN",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True
+    },
+    {
+        "main_effect": "BLUE",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True,
+    },
+    {
+        "main_effect": "RED",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True
+    },
+    {
+        "main_effect": "GREEN",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True
+    },
+    {
+        "main_effect": "BLUE",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True,
+    },
+    {
+        "main_effect": "RED",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True
+    },
+    {
+        "main_effect": "GREEN",
+        "tail_code": None,
+        "duration": 1,
+        "hold_with_repeated_send": True
+    },
+    {
+        "main_effect": "BLUE",
+        "tail_code": None,
+        "duration": 1,
         "hold_with_repeated_send": True,
     },
     {
@@ -76,8 +130,10 @@ EFFECTS_TO_SHOW = [
 
 
 #################################
-arduino = serial.Serial(port=ARDUINO_SERIAL_PORT, baudrate=ARDUINO_BAUD_RATE, timeout=.1)
+arduino = serial.Serial(port=ARDUINO_SERIAL_PORT,
+                        baudrate=ARDUINO_BAUD_RATE, timeout=.1)
 time.sleep(2.5)
+
 
 def send_effect(main_effect, tail_code, sleep_after_send=False):
     if main_effect in base_color_effects:
@@ -86,7 +142,8 @@ def send_effect(main_effect, tail_code, sleep_after_send=False):
             if tail_code in tail_codes:
                 effect_bits = effect_bits + tail_codes[tail_code]
             else:
-                raise Exception("Invalid tail code name. See tail_codes in effect_definitions.py for options.")
+                raise Exception(
+                    "Invalid tail code name. See tail_codes in effect_definitions.py for options.")
     elif main_effect in special_effects:
         effect_bits = special_effects[main_effect]
         if tail_code:
@@ -99,18 +156,22 @@ def send_effect(main_effect, tail_code, sleep_after_send=False):
     arduino_string_ver = to_arduino_string(effect_bits)
     arduino.write(bytes(arduino_string_ver, 'utf-8'))
     if sleep_after_send:
-         # Wait for enough time for the arduino to transmit this code
+        # Wait for enough time for the arduino to transmit this code
         time.sleep(0.01 + 0.0008 * len(effect_bits))
-    print(f"Sent effect: {main_effect}, {'no tail effect' if not tail_code else 'tail: ' + tail_code}.")
+    print(
+        f"Sent effect: {main_effect}, {'no tail effect' if not tail_code else 'tail: ' + tail_code}.")
+
 
 for effect_instance in EFFECTS_TO_SHOW:
     if effect_instance.get("main_effect"):
         if effect_instance.get("hold_with_repeated_send", None):
             start_time = datetime.datetime.now()
             while (datetime.datetime.now() - start_time).total_seconds() <= effect_instance["duration"]:
-                send_effect(effect_instance.get("main_effect"), effect_instance.get("tail_code", None), sleep_after_send=True)
+                send_effect(effect_instance.get("main_effect"), effect_instance.get(
+                    "tail_code", None), sleep_after_send=True)
         else:
-            send_effect(effect_instance.get("main_effect"), effect_instance.get("tail_code", None))
+            send_effect(effect_instance.get("main_effect"),
+                        effect_instance.get("tail_code", None))
             time.sleep(effect_instance["duration"])
     else:
         time.sleep(effect_instance["duration"])
